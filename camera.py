@@ -9,22 +9,22 @@ def take_photo(path, name):
     face_detector = cv2.CascadeClassifier('./model/haarcascade_frontalface_default.xml')
     
     img_counter = 0
-    min_size = (100,100)
+    min_size = (50,50)
     
     while True:
         
          ret, frame = cam.read()
+         frame = cv2.flip(frame, 1)
+         faces = face_detector.detectMultiScale(frame, 1.05, 5, minSize = min_size)
+         for (x,y,w,h) in faces:
+            cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
          if not ret:
              test_card = cv2.imread('test_card.jpg')
-             test_card = cv2.imshow('failed to grab frame', test_card)
+             cv2.imshow('failed to grab frame', test_card)
              #print("failed to grab frame")
          
          else:
              cv2.imshow("Capture_part", frame)
-             frame = cv2.flip(frame, 1)
-             faces = face_detector.detectMultiScale(frame, 1.3, 5, min_size = min_size)
-             for (x,y,w,h) in faces:
-                 cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
      
          k = cv2.waitKey(1)
          if k%256 == 27:
